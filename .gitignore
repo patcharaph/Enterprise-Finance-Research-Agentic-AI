@@ -1,0 +1,15 @@
+# Virtual envs
+.venv/
+venv/
+
+# Bytecode/cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment / secrets
+.env
+
+# OS noise
+.DS_Store
+Thumbs.db
