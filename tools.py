@@ -11,7 +11,7 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 try:
     from dotenv import load_dotenv
 
-    load_dotenv()
+    load_dotenv(".env", override=True)
 except Exception:
     # dotenv is optional; skip if unavailable
     pass
@@ -38,6 +38,7 @@ def fetch_price_history(ticker: str) -> str:
             start=start.date(),
             end=end.date(),
             progress=False,
+            auto_adjust=False,  # explicit to avoid future defaults surprises
         )
     except Exception as exc:  # yfinance occasionally raises on bad tickers
         return f"No price data found for {ticker} (error: {exc})"

@@ -16,7 +16,9 @@ Stateful multi-agent workflow for SET50 research that fuses real-time web search
    ```
 3) Set environment keys (edit `.env`):
    ```
-   OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+   OPENROUTER_API_KEY=YOUR_OPENROUTER_API_KEY
+   OPENROUTER_MODEL=meta-llama/llama-3.1-70b-instruct
+   OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
    TAVILY_API_KEY=YOUR_TAVILY_API_KEY
    ```
 4) Run a sample workflow:

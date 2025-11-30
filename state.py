@@ -1,6 +1,12 @@
 from __future__ import annotations
 
-from typing import Dict, List, Literal, NotRequired, TypedDict
+from typing import Dict, List, Literal, TypedDict
+
+# Python <3.11 compatibility for PEP 655 markers
+try:
+    from typing import NotRequired  # type: ignore
+except ImportError:
+    from typing_extensions import NotRequired  # type: ignore
 
 
 class AgentState(TypedDict, total=False):

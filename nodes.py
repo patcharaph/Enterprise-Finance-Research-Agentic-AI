@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict
 
@@ -17,17 +18,27 @@ from tools import fetch_price_history, search_news
 try:
     from dotenv import load_dotenv
 
-    load_dotenv()
+    # Explicitly load local .env and allow override so system envs don't block
+    load_dotenv(".env", override=True)
 except Exception:
     # Optional dependency for local .env loading
     pass
 
 
-def _get_llm(model: str = "gpt-4o-mini", temperature: float = 0.2) -> ChatOpenAI:
+def _get_llm(model: str = "meta-llama/llama-3.1-70b-instruct", temperature: float = 0.2) -> ChatOpenAI:
     """
     Centralized LLM factory so we can swap models easily.
     """
-    return ChatOpenAI(model=model, temperature=temperature)
+    api_key = os.getenv("OPENROUTER_API_KEY")
+    if not api_key:
+        raise EnvironmentError("OPENROUTER_API_KEY is required for OpenRouter access.")
+
+    return ChatOpenAI(
+        model=os.getenv("OPENROUTER_MODEL", model),
+        temperature=temperature,
+        api_key=api_key,
+        base_url=os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
+    )
 
 
 def _load_prices(ticker: str) -> pd.DataFrame:
@@ -36,7 +47,13 @@ def _load_prices(ticker: str) -> pd.DataFrame:
     """
     end = datetime.now(timezone.utc)
     start = end - timedelta(days=60)
-    df = yf.download(ticker, start=start.date(), end=end.date(), progress=False)
+    df = yf.download(
+        ticker,
+        start=start.date(),
+        end=end.date(),
+        progress=False,
+        auto_adjust=False,  # explicitly disable to avoid default shifts
+    )
     return df.tail(60) if not df.empty else df
 
 
@@ -88,7 +105,8 @@ def analyst_node(state: AgentState) -> Dict[str, Any]:
         indicators["SMA_20"] = math.nan
         indicators["SMA_50"] = math.nan
 
-    latest_price = float(close.iloc[-1])
+    # .item() avoids pandas FutureWarning on float conversion
+    latest_price = float(close.iloc[-1].item())
     sma20 = indicators.get("SMA_20")
     sma50 = indicators.get("SMA_50")
     rsi = indicators.get("RSI_14")
