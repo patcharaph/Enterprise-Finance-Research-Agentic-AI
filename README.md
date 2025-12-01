@@ -20,10 +20,16 @@ Stateful multi-agent workflow for SET50 research that fuses real-time web search
    OPENROUTER_MODEL=meta-llama/llama-3.1-70b-instruct
    OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
    TAVILY_API_KEY=YOUR_TAVILY_API_KEY
+   LANGCHAIN_API_KEY=YOUR_LANGSMITH_KEY
+   LANGCHAIN_TRACING_V2=true
    ```
 4) Run a sample workflow:
    ```bash
    python -c "from graph import run_workflow; print(run_workflow('PTT.BK'))"
+   ```
+5) Launch the HITL Streamlit UI:
+   ```bash
+   streamlit run app.py
    ```
 
 ## Files

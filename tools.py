@@ -6,7 +6,14 @@ from typing import List, Tuple
 
 import pandas as pd
 import yfinance as yf
-from langchain_community.tools.tavily_search import TavilySearchResults
+
+# Prefer new langchain-tavily package if available to avoid deprecation warning
+try:
+    from langchain_tavily import TavilySearch
+    _TAVILY_CLASS = "new"
+except Exception:  # fallback to community tool
+    from langchain_community.tools.tavily_search import TavilySearchResults
+    _TAVILY_CLASS = "legacy"
 
 try:
     from dotenv import load_dotenv
@@ -68,7 +75,10 @@ def search_news(ticker: str, max_results: int = 5) -> List[str]:
         f"{datetime.now(timezone.utc).year}"
     )
 
-    tool = TavilySearchResults(api_key=api_key, max_results=max_results)
+    if _TAVILY_CLASS == "new":
+        tool = TavilySearch(api_key=api_key, max_results=max_results)
+    else:
+        tool = TavilySearchResults(api_key=api_key, max_results=max_results)
 
     try:
         results = tool.run(query)

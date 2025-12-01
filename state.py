@@ -17,8 +17,9 @@ class AgentState(TypedDict, total=False):
     without requiring the entire payload to be present upfront.
     """
 
-    # Input
+    # Input / control
     ticker: str
+    revision_count: NotRequired[int]
 
     # Research data
     price_history: str
@@ -28,10 +29,8 @@ class AgentState(TypedDict, total=False):
     technical_indicators: Dict[str, float]
     trend_signal: str
 
-    # Drafting
-    draft_report: str
+    # Drafting & review
+    draft_report_json: Dict[str, object]
+    human_feedback: str
     critic_feedback: str
     review_status: Literal["APPROVE", "REJECT"]
-
-    # Control
-    revision_count: NotRequired[int]
