@@ -10,11 +10,20 @@ Stateful multi-agent workflow for SET50 research that fuses real-time web search
 
 ## Quickstart
 1) Python 3.10+ recommended.  
-2) Install deps:
+2) (Optional but recommended) Create/activate venv, e.g. on PowerShell:
+   ```bash
+   python -m venv .venv
+   .\.venv\Scripts\activate
+   ```
+3) Install deps:
    ```bash
    pip install -r requirements.txt
    ```
-3) Set environment keys (edit `.env`):
+   If you want to silence Tavily deprecation warnings, also install:
+   ```bash
+   pip install langchain-tavily
+   ```
+4) Set environment keys (edit `.env`):
    ```
    OPENROUTER_API_KEY=YOUR_OPENROUTER_API_KEY
    OPENROUTER_MODEL=meta-llama/llama-3.1-70b-instruct
@@ -23,13 +32,13 @@ Stateful multi-agent workflow for SET50 research that fuses real-time web search
    LANGCHAIN_API_KEY=YOUR_LANGSMITH_KEY
    LANGCHAIN_TRACING_V2=true
    ```
-4) Run a sample workflow:
+5) Run a sample workflow:
    ```bash
    python -c "from graph import run_workflow; print(run_workflow('PTT.BK'))"
    ```
-5) Launch the HITL Streamlit UI:
+6) Launch the HITL Streamlit UI (make sure the venv is activated):
    ```bash
-   streamlit run app.py
+   python -m streamlit run app.py
    ```
 
 ## Files

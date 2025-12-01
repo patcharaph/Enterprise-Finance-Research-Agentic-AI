@@ -32,6 +32,15 @@ def _graph_config() -> Dict:
     return {"configurable": {"thread_id": st.session_state.thread_id}}
 
 
+def _ensure_session_defaults() -> None:
+    """Guarantee session keys exist to avoid AttributeError on first render."""
+    st.session_state.setdefault("graph", None)
+    st.session_state.setdefault("thread_id", f"ui-{uuid.uuid4()}")
+    st.session_state.setdefault("latest_snapshot", None)
+    st.session_state.setdefault("progress_log", [])
+    st.session_state.setdefault("status", "idle")
+
+
 def _run_until_interrupt(input_state: AgentState | None = None) -> None:
     """
     Drive the graph forward until it hits the interrupt_before=['critic'] barrier or finishes.
@@ -121,6 +130,7 @@ def _render_final(latest: AgentState) -> None:
 
 
 def main() -> None:
+    _ensure_session_defaults()
     st.title("Enterprise Finance Research (LangGraph + HITL)")
     st.caption("StateGraph with human-in-the-loop pause before Critic. SET50 focus.")
 
